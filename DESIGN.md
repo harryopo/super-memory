@@ -29,11 +29,13 @@
   --font-display: Georgia, "Times New Roman", "Noto Serif SC", "Source Han Serif SC", SimSun, serif;
   --font-body: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
   --font-mono: ui-monospace, Consolas, "JetBrains Mono", monospace;
-  --font-size-hero: clamp(30px, 4.5vw, 42px);
-  --font-size-h2: 24px;
-  --font-size-body: 16px;
-  --font-size-meta: 13px;
-  --line-height-body: 1.85;
+  --font-size-hero: clamp(2.375rem, 4.5vw, 3rem);
+  --font-size-h2: clamp(1.5rem, 2.6vw, 1.625rem);
+  --font-size-lede: 1.125rem;
+  --font-size-body: 1rem;
+  --font-size-small: 0.875rem;
+  --font-size-meta: 0.75rem;
+  --line-height-body: 1.7;
 }
 ```
 标题衬线（--font-display），正文无衬线，代码/标识符等宽。字重克制：display 用常规字重靠字号立层次，最多 600。
@@ -42,14 +44,16 @@
 
 ```css
 :root {
-  --space-section: 76px; --space-block: 28px; --space-inline: 20px;
+  --space-section: 104px; --space-block: 28px; --space-inline: 20px;
   --measure: 700px;      /* 正文栏宽（书页行长约 35em） */
 }
 ```
 
 ## 5. 布局与构图
 
-- 单栏书页（正文 max-width --measure），桌面端左侧固定小目录（≥1080px 显示，随滚动点亮当前节）
+- **单一网格**：.shell = 208px 目录列 + 1fr 正文列（gap 64，max-width 1144），目录 position:sticky 与正文左缘同源对齐
+- 单栏书页（正文 max-width --measure），目录 ≥1180px 显示，随滚动点亮当前节
+- 字距分级：Display/H1 -0.01em · ALL CAPS 眉题 0.08em · 正文 normal（typography 硬规则）
 - **禁居中大标题**：卷首左对齐——眉题小字 → 衬线大标题 → 首段 → 元信息行（真实指标）
 - **禁卡片网格**：信息用编号章节（一/二/三）、条目列表（条目号 + 名称 + 描述）、表格承载；分隔靠规则线与小节间距
 - 全局响应式：≤1080px 目录隐藏；≤640px 字号降档、流程图纵向

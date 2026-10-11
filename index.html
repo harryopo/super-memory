@@ -6,7 +6,8 @@
 <title>super-memory · AI 的记忆与知识管理工作台</title>
 <meta name="description" content="把开发中的错误、纠正、进度与偏好，沉淀成结构化、可检索、可交接的项目记忆。纯 Markdown，无外部服务。">
 <style>
-/* Design Tokens — 见 DESIGN.md（权威专家 × 笔记/书页/温度 · 档案卷宗形态） */
+/* Design Tokens — 见 DESIGN.md（权威专家 × 笔记/书页/温度 · 档案卷宗形态）
+   排版遵循 super-frontend-design typography 硬规则：字号阶≤8、行高分级、字距分级 */
 :root{
   --color-paper:#faf7f0; --color-paper-deep:#f1ecdf;
   --color-ink:#26221c; --color-ink-faint:#6e6659;
@@ -14,10 +15,14 @@
   --font-display:Georgia,"Times New Roman","Noto Serif SC","Source Han Serif SC",SimSun,serif;
   --font-body:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
   --font-mono:ui-monospace,Consolas,"JetBrains Mono",monospace;
-  --font-size-hero:clamp(32px,4.5vw,44px); --font-size-h2:24px;
-  --font-size-body:16px; --font-size-meta:12px;
-  --line-height-body:1.84;
-  --measure:700px; --space-section:76px; --space-block:28px; --space-inline:20px;
+  --font-size-hero:clamp(2.375rem,4.5vw,3rem);   /* 38-48 */
+  --font-size-h2:clamp(1.5rem,2.6vw,1.625rem);   /* 24-26 */
+  --font-size-lede:1.125rem;                      /* 18 */
+  --font-size-body:1rem;                          /* 16 */
+  --font-size-small:0.875rem;                     /* 14 */
+  --font-size-meta:0.75rem;                       /* 12 */
+  --measure:700px; --space-section:104px; --space-block:28px; --space-inline:20px;
+  --line-height-body:1.7;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -31,88 +36,100 @@ a:active{opacity:.7}
 code{font-family:var(--font-mono);font-size:.84em;background:var(--color-paper-deep);
   padding:0 4px;border-radius:2px}
 
-/* ── 左侧目录（≥1080px）────────────────── */
-.toc{position:fixed;left:calc(50% - 588px);top:120px;width:152px;display:none}
-@media(min-width:1180px){.toc{display:block}}
-.toc-title{font-family:var(--font-mono);font-size:var(--font-size-meta);letter-spacing:.14em;
+/* ── 单一网格：目录与正文同源对齐 ─────────────────── */
+.shell{max-width:1144px;margin:0 auto;padding:0 24px;
+  display:grid;grid-template-columns:208px minmax(0,1fr);gap:64px;align-items:start}
+.toc{position:sticky;top:96px}
+.toc-title{font-family:var(--font-mono);font-size:var(--font-size-meta);letter-spacing:.08em;
   color:var(--color-ink-faint);margin-bottom:16px}
-.toc a{display:flex;align-items:center;min-height:44px;font-size:13.5px;color:var(--color-ink-faint);
-  padding:0 0 0 16px;border-left:1px solid var(--color-line)}
+.toc a{display:flex;align-items:center;min-height:44px;font-size:var(--font-size-small);
+  color:var(--color-ink-faint);padding:0 0 0 16px;border-left:1px solid var(--color-line)}
 .toc a.here{color:var(--color-accent);border-left-color:var(--color-accent);font-weight:600}
+.content{min-width:0}
+@media(max-width:1179px){
+  .shell{grid-template-columns:1fr;gap:0}
+  .toc{display:none}
+}
 
 /* ── 卷首 ─────────────────── */
-.masthead{padding:96px 0 64px;border-bottom:1px solid var(--color-line)}
-.kicker{font-family:var(--font-mono);font-size:var(--font-size-meta);letter-spacing:.22em;
-  color:var(--color-ink-faint);margin-bottom:24px}
+.masthead{padding:120px 0 72px;border-bottom:2px solid var(--color-ink);
+  max-width:var(--measure)}
+.kicker{font-family:var(--font-mono);font-size:var(--font-size-meta);letter-spacing:.08em;
+  color:var(--color-ink-faint);margin-bottom:28px}
 .kicker b{color:var(--color-accent);font-weight:600}
 h1{font-family:var(--font-display);font-weight:400;font-size:var(--font-size-hero);
-  line-height:1.28;letter-spacing:.01em;margin-bottom:20px}
+  line-height:1.15;letter-spacing:-0.01em;margin-bottom:24px}
 h1 em{font-style:normal;color:var(--color-accent)}
-.lede{font-size:17.5px;max-width:640px;color:var(--color-ink);margin-bottom:24px}
-.meta{font-family:var(--font-mono);font-size:var(--font-size-meta);color:var(--color-ink-faint);
-  display:flex;gap:24px;flex-wrap:wrap;border-top:1px solid var(--color-line);padding-top:16px}
+.lede{font-size:var(--font-size-lede);max-width:640px;color:var(--color-ink);margin-bottom:28px}
+.meta{font-family:var(--font-mono);font-size:var(--font-size-meta);letter-spacing:.02em;
+  color:var(--color-ink-faint);display:flex;gap:24px;flex-wrap:wrap;
+  border-top:1px solid var(--color-line);padding-top:16px;align-items:baseline}
 .meta b{color:var(--color-ink);font-weight:600}
 .meta a{font-family:var(--font-body)}
 
 /* ── 章节骨架 ─────────────────── */
-main{max-width:var(--measure);margin:0 auto;padding:0 24px}
-section{padding-top:var(--space-section)}
-.sec-head{display:flex;align-items:baseline;gap:var(--space-inline);margin-bottom:24px;
-  border-bottom:1px solid var(--color-line);padding-bottom:12px}
-.sec-no{font-family:var(--font-display);font-size:36px;color:var(--color-ink-faint);
-  transition:color .25s;line-height:1}
+main{padding-top:16px;max-width:var(--measure)}
+section{padding-top:104px}
+.sec-head{display:flex;align-items:baseline;gap:var(--space-inline);
+  border-top:2px solid var(--color-ink);margin-bottom:32px;padding-top:20px}
+.sec-no{font-family:var(--font-display);font-size:clamp(2.375rem,3.4vw,3rem);font-weight:400;
+  color:var(--color-line);transition:color .25s;line-height:1;letter-spacing:-0.02em}
 section.lit .sec-no{color:var(--color-accent)}
-h2{font-family:var(--font-display);font-weight:400;font-size:var(--font-size-h2);letter-spacing:.01em}
-.sec-sub{font-size:var(--font-size-meta);color:var(--color-ink-faint);margin-left:auto;font-family:var(--font-mono)}
-p{margin-bottom:16px}
-p.muted{color:var(--color-ink-faint);font-size:14.5px}
+h2{font-family:var(--font-display);font-weight:600;font-size:var(--font-size-h2);
+  letter-spacing:-0.01em;line-height:1.2}
+.sec-sub{font-size:var(--font-size-meta);letter-spacing:.08em;color:var(--color-ink-faint);
+  margin-left:auto;font-family:var(--font-mono)}
+p{margin-bottom:20px}
+p.muted{color:var(--color-ink-faint);font-size:var(--font-size-small)}
 
-/* 条目（无卡片） */
-.entries{list-style:none;margin:20px 0}
-.entries li{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--color-line)}
+/* 条目（无卡片）：统一悬挂缩进列宽 */
+.entries{list-style:none;margin:24px 0}
+.entries li{display:flex;gap:24px;padding:20px 0;border-bottom:1px solid var(--color-line)}
 .entries li:last-child{border-bottom:none}
-.entry-no{font-family:var(--font-display);color:var(--color-accent);font-size:16px;
-  min-width:36px;padding-top:0}
-.entry-body b{font-weight:600}
+.entry-no{font-family:var(--font-display);color:var(--color-accent);font-size:17px;
+  flex:0 0 80px;line-height:1.5}
+.entries li:not(:has(.cmd)) .entry-no{letter-spacing:.2em}
+.entry-body b{font-weight:600;font-size:17px}
 .entry-body .cmd{font-family:var(--font-mono);font-size:.9em;color:var(--color-accent)}
-.entry-body p{font-size:14.5px;color:var(--color-ink-faint);margin:4px 0 0}
+.entry-body p{font-size:var(--font-size-small);color:var(--color-ink-faint);margin:4px 0 0;line-height:1.6}
 .entry-body .src{font-family:var(--font-mono);font-size:var(--font-size-meta);color:var(--color-ink-faint)}
 
 /* 表格：仅横线 */
-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14.5px}
-thead th{font-family:var(--font-mono);font-size:var(--font-size-meta);letter-spacing:.1em;color:var(--color-ink-faint);
-  text-align:left;border-top:2px solid var(--color-ink);border-bottom:1px solid var(--color-line);
-  padding:12px 12px 12px 0;font-weight:600}
-tbody td{border-bottom:1px solid var(--color-line);padding:12px 12px 12px 0;vertical-align:top}
-tbody td:first-child{font-family:var(--font-mono);font-size:13.5px;color:var(--color-accent);white-space:nowrap}
+table{width:100%;border-collapse:collapse;margin:24px 0;font-size:var(--font-size-small);line-height:1.6}
+thead th{font-family:var(--font-mono);font-size:var(--font-size-meta);letter-spacing:.08em;
+  color:var(--color-ink-faint);text-align:left;border-top:2px solid var(--color-ink);
+  border-bottom:1px solid var(--color-line);padding:12px 16px 12px 0;font-weight:600}
+tbody td{border-bottom:1px solid var(--color-line);padding:12px 16px 12px 0;vertical-align:top}
+tbody td:first-child{font-family:var(--font-mono);font-size:var(--font-size-small);
+  color:var(--color-accent);white-space:nowrap;font-weight:600}
 
 /* 代码块：纸面深一阶 + 左规线 */
 pre{background:var(--color-paper-deep);border-left:2px solid var(--color-accent);
-  padding:20px 24px;font-family:var(--font-mono);font-size:13.5px;line-height:1.88;
+  padding:20px 24px;font-family:var(--font-mono);font-size:var(--font-size-small);line-height:1.9;
   overflow-x:auto;margin:24px 0}
 pre .c{color:var(--color-ink-faint)}
 
 /* 引文 */
-.callout{border-left:3px solid var(--color-accent);padding:4px 0 4px 20px;margin:24px 0;
-  color:var(--color-ink-faint);font-size:15px;font-family:var(--font-display)}
+.callout{border-left:3px solid var(--color-accent);padding:4px 0 4px 24px;margin:28px 0;
+  color:var(--color-ink-faint);font-size:17px;font-family:var(--font-display)}
 
 /* 统计 */
-.stats{display:flex;gap:48px;flex-wrap:wrap;margin:24px 0 8px}
-.stat b{display:block;font-family:var(--font-display);font-size:40px;font-weight:400;
-  color:var(--color-accent);line-height:1.2;font-variant-numeric:tabular-nums}
-.stat span{font-size:13.5px;color:var(--color-ink-faint)}
+.stats{display:flex;gap:64px;flex-wrap:wrap;margin:28px 0 8px}
+.stat b{display:block;font-family:var(--font-display);font-size:clamp(2.5rem,4vw,3rem);font-weight:400;
+  color:var(--color-accent);line-height:1.1;letter-spacing:-0.02em;font-variant-numeric:tabular-nums}
+.stat span{font-size:var(--font-size-small);color:var(--color-ink-faint)}
 
 footer{border-top:2px solid var(--color-ink);margin-top:var(--space-section);
-  padding:28px 24px 56px;max-width:var(--measure);margin-left:auto;margin-right:auto;
-  font-size:14px;color:var(--color-ink-faint)}
-footer .fin{font-family:var(--font-display);font-size:15px;color:var(--color-ink);margin-bottom:8px}
+  padding:28px 0 64px;font-size:14px;color:var(--color-ink-faint)}
+footer .fin{font-family:var(--font-display);font-size:17px;color:var(--color-ink);margin-bottom:8px}
 
 @media(max-width:640px){
-  :root{--space-section:56px}
-  .masthead{padding:64px 0 44px}
+  :root{--space-section:72px}
+  .masthead{padding:72px 0 52px}
   .entries li{flex-direction:column;gap:4px}
+  .entry-no{flex-basis:auto}
   .sec-sub{display:none}
-  .stats{gap:24px}
+  .stats{gap:32px}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -121,6 +138,7 @@ footer .fin{font-family:var(--font-display);font-size:15px;color:var(--color-ink
 </style>
 </head>
 <body>
+<div class="shell">
 
 <nav class="toc" aria-label="本卷目录">
   <div class="toc-title">本卷目录</div>
@@ -132,9 +150,8 @@ footer .fin{font-family:var(--font-display);font-size:15px;color:var(--color-ink
   <a href="#s6" data-sec="s6">六 · 质量与溯源</a>
 </nav>
 
-<main>
-  <!-- 卷首：左对齐，禁居中大标题 -->
-  <header class="masthead">
+<div class="content">
+<header class="masthead">
     <div class="kicker"><b>SUPER-MEMORY</b> · 记忆与知识管理工作台 · AI SKILL</div>
     <h1>把开发过程，<br>整理成一份<em>可交接的卷宗</em>。</h1>
     <p class="lede">AI 会话结束即失忆，交接靠口口相传，散落的记忆文档越积越乱。super-memory
@@ -145,6 +162,8 @@ footer .fin{font-family:var(--font-display);font-size:15px;color:var(--color-ink
       <span><a href="https://github.com/harryopo/super-memory">github.com/harryopo/super-memory</a></span><span>MIT</span>
     </div>
   </header>
+
+<main>
 
   <section id="s1">
     <div class="sec-head"><span class="sec-no">一</span><h2>要解决的问题</h2><span class="sec-sub">WHY</span></div>
@@ -229,6 +248,8 @@ python scripts/verify.py</pre>
   <div class="fin">super-memory · 记忆与知识管理工作台</div>
   <div><a href="https://github.com/harryopo/super-memory">github.com/harryopo/super-memory</a> · MIT License · 在线介绍页由 gh-pages 分支承载，main 分支仅含干净的 skill 安装包</div>
 </footer>
+</div>
+</div>
 
 <script>
 // 滚动叙事：章节点亮 + 目录跟随 + 数字计数（prefers-reduced-motion 时直接终态）
