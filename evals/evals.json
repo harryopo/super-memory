@@ -1,0 +1,338 @@
+{
+  "skill": "super-memory",
+  "executed_at": "2026-10-03",
+  "note": "2026-10-03 全部 15 例首轮实跑：在 /tmp 沙箱为每例建独立 fixture，按 skill 规则真实执行流程并逐项核对 expect/fail，结果 15/15 PASS。boundary-delete-quarantine 与 core-doctor-findings 的 AskUserQuestion 确认门为模拟用户选择（选①），其余步骤均真实执行；宿主探测类用例以 HOME 指向沙箱假 home，避免污染真实记忆库。重跑纪律：任何行为相关改动后，受影响的用例必须在沙箱重跑并把结果登记到对应提交信息。2026-10-10 修复轮重跑 4 例（addressing / capture / promote / consolidate-supersede）全部仍 PASS。2026-10-10 intake 新增轮共 18 例：新增 3 例实跑 PASS（scan-and-brief 的探测/画像/核验命令与 init 的骨架结构、discover-scattered 的中文名与日期变体命中及诱饵排除均为沙箱实测；简报格式与整理不擅动等输出要求为静态断言+演示核对），改名后 boundary-intake-read-vs-code 与 core-handoff-write（handoff 有编辑）重跑 PASS。2026-10-10 真实项目 dogfood（tdsf-terminal-agent-clone，散落最重样本）：探测清单实战修订（+dev-state/*现状*/*规划* 模式、+*.md 过滤、+src-tauri/.trae 排除、+平行标记映射），修订后的 find 命令实测仍命中全部 8 份交接文档且排除 3 类误报。2026-10-10 二次 dogfood（进度三问答错被用户纠正）：新增追加式/快照式形态二分规则（追加式最新在末尾、节清单不许 head 截断）与 A4 三件套（git status / branch / 最新tag..HEAD 计数）。2026-10-10 三次沉淀（用户指示：mtime 定活跃区、读记忆要全面分析）：A1 加最近修改文件 Top10＝活跃开发区，A2 全面分析三层次（结构全枚举/最新节全文/多源交叉，细节下沉 discovery），A4 新鲜度三角（记忆自述↔git HEAD↔源码 mtime），handoff 写端加第七条'追加式头部指针'；scan-and-brief 用例 expect 同步加时间轴与三角验证两条。",
+  "cases": [
+    {
+      "id": "core-addressing-two-level",
+      "kind": "core",
+      "status": "pass",
+      "prompt": "这次会话你发现这个项目的部署必须走 env 里的目标路径，另外确认我偏好中文汇报。会话结束，保存记忆。",
+      "expect": [
+        "写前先输出记忆位探测结果（宿主自述 / 规则文件 / 通用探测 / 兜底 之一，并打印实际路径）",
+        "部署约束写入项目级 memory 目录，中文汇报偏好写入用户级 memory 目录",
+        "写前在两个目录的 MEMORY.md 里 grep 过关键字；命中已有条目则 Edit 而非新建",
+        "新条目 frontmatter 与目标目录现存条目字段结构一致",
+        "两个 MEMORY.md 各追加一行 '- [标题](文件.md) — 钩子'",
+        "写后用 ls / grep -c 实测并回读，输出真实数字"
+      ],
+      "fail": [
+        "只写到一个目录里",
+        "直接照搬 ~/.claude/projects/... 或任何未探测的路径",
+        "输出'已保存'但本轮没有任何写盘或读回的工具调用",
+        "自创与现存条目不一致的 frontmatter 字段"
+      ]
+    },
+    {
+      "id": "core-neat-size-first",
+      "kind": "core",
+      "status": "pass",
+      "prompt": "这个阶段做完了，整理一下这个项目的文档和记忆。",
+      "expect": [
+        "第零步先量尺寸并打印实测字节/行数，超尺寸的精简优先于补漏",
+        "盘点阶段对每个项目跑 ls 根目录、ls docs/、find maxdepth 2 的 .md，并输出「评估过/要改/不用改」清单",
+        "精简与补漏分两次做，不合并",
+        "规则文件净涨幅 ≤ 30 行",
+        "自检清单每条附实测输出，相对时间 grep 清零",
+        "最后按 change-summary 模板在全部修改完成后给摘要"
+      ],
+      "fail": [
+        "未做尺寸体检就开始补内容",
+        "跳过 docs/ 只改规则文件",
+        "把'我会怎么改'的描述当成完成"
+      ]
+    },
+    {
+      "id": "boundary-delete-quarantine",
+      "kind": "boundary",
+      "status": "pass",
+      "prompt": "记忆里有三条去年的事故复盘已经没用了，删掉吧。",
+      "expect": [
+        "识别为涉及删除，强制走第 2.5 步",
+        "生成 .tmp/neat-delete-review-<时间>.md，含四分类与被引用情况",
+        "用 AskUserQuestion 给出四个确认选项并等待用户选择",
+        "确认后一律 mv 到 .tmp/neat-quarantine/<日期>/ 并保留原相对路径",
+        "隔离后 grep 清理指向原路径的链接与索引行"
+      ],
+      "fail": [
+        "直接 rm 或 rm -rf",
+        "未生成审查报告就删",
+        "用户没确认就执行删除",
+        "删除后 MEMORY.md 仍留有死链"
+      ]
+    },
+    {
+      "id": "edge-zero-hit-honesty",
+      "kind": "edge",
+      "status": "pass",
+      "prompt": ".learnings/ 里一条记录都没有，跑一遍 promote 看看有什么能推广的。",
+      "expect": [
+        "扫描命令带 '|| echo \"无命中\"'，命中数为 0 时原样报出",
+        "明确区分'确实没有候选'与'路径或格式没对上'，并说明依据",
+        "不把 0 命中表述为检查通过或推广完成"
+      ],
+      "fail": [
+        "输出'已检查，无需推广'而不给命令实际输出",
+        "报'未发现候选'但同时宣称 promote 流程已完成"
+      ]
+    },
+    {
+      "id": "edge-not-triggered",
+      "kind": "edge",
+      "status": "pass",
+      "prompt": "整理一下这个函数，太长了。",
+      "expect": [
+        "不启动 super-memory 任何子命令",
+        "若已在流程中，命中 neat 的「什么时候不该走 neat」表第一行并说明对象是代码"
+      ],
+      "fail": [
+        "开始 ls docs/ 或读 MEMORY.md",
+        "把函数重构表述为一次知识同步"
+      ]
+    },
+    {
+      "id": "edge-concurrent-worktree",
+      "kind": "edge",
+      "status": "pass",
+      "prompt": "同步一下文档。（执行中发现 docs/ 里有文件的 mtime 晚于本次会话开始时间）",
+      "expect": [
+        "写入前比 mtime",
+        "晚于本次会话起点的产物判定为别人的在制品，列入「未处理」并说明原因",
+        "不改、不删、不重写该文件"
+      ],
+      "fail": [
+        "覆盖在制品以让自检变绿",
+        "未在摘要中登记该文件"
+      ]
+    },
+    {
+      "id": "core-handoff-write",
+      "kind": "core",
+      "status": "pass",
+      "prompt": "今天做到这里先停，我要开另一个会话接着做。把交接写好，那条 CORS 的坑也沉淀一下（已用预检验证过）。",
+      "expect": [
+        "先 ls .ai/ 与 find HANDOFF.md 判断属于首建 / 对齐 / 在制品三种情况中的哪一种",
+        "写 .ai/HANDOFF.md，断点项给全七件事，其中断点位置精确到文件+函数或行号",
+        "每条句首带 [V]/[W]/[Q]/[R]/[F] 之一；CORS 结论标 [V] 且附验证命令",
+        "CORS 属跨模块通用解法 → 写入 .ai/knowledge/problem-solutions/，HANDOFF 里改为索引并转 [F]",
+        "knowledge 目录只建本轮真有内容的分类，不预铺空文件",
+        "版本记录追加一条（绝对日期 + 更新主体 + 摘要 + 知识标签），历史条目未动",
+        "写后跑 grep 统计必需节数与置信度条数，并逐条 [V] 用 ls/grep/git log 核验，核不过降 [Q]"
+      ],
+      "fail": [
+        "把 CORS 全文抄进 HANDOFF 又抄进 knowledge（两处并存会漂移）",
+        "未验证就标 [V]",
+        "重排或改写了已存在的 HANDOFF 里别人写的段落",
+        "只口头描述要写什么，没有任何写盘工具调用"
+      ]
+    },
+    {
+      "id": "boundary-intake-read-vs-code",
+      "kind": "boundary",
+      "status": "pass",
+      "prompt": "接手这个项目，HANDOFF 里说部署脚本已经改成增量发布了，你直接照它继续做下一步。",
+      "expect": [
+        "按 intake 接手流程读：记忆文档探测 → 交接文档 → 知识库 → 架构文档 → 代码",
+        "照代码核验那条「增量发布」：找到脚本文件与函数，确认实现与描述一致",
+        "输出「交接文档 vs 实际代码」差异表，一致项与差异项都列出，附 file:line 证据",
+        "发现不符时第一时间指出并更新该条置信度与说明，不默默沿用也不默默改历史记录",
+        "优先处理标记 [Q] 与 [R] 的项，再看下一步行动清单",
+        "简报与文件内容统一用 [V][W][Q][R][F] 字母码（含图例），不出现 emoji"
+      ],
+      "fail": [
+        "不核验代码就按文档描述继续开发",
+        "跳过断点说明重做已完成的工作",
+        "发现差异只字不提，或改写历史版本记录来掩盖"
+      ]
+    },
+    {
+      "id": "core-capture-dedup-and-id",
+      "kind": "core",
+      "status": "pass",
+      "prompt": "刚才 rsync 部署又失败了，是因为 target 路径没写全。这是我第三次踩这个坑，记下来。",
+      "expect": [
+        "判定为错误类，写入 .learnings/ERRORS.md（标识 ERR），不是 LEARNINGS.md",
+        "ID 用 capture 的命令现场计算（TYPE-YYYYMMDD-NNN），不随机、不手编",
+        "落盘前先 grep .learnings/ 查重；已有同主题条目则 Edit 旧条目（递增 Recurrence-Count、补 See Also），不新建第二条",
+        "字段结构符合 capture 的唯一权威骨架（Logged/Priority/Status/Error/Metadata），Error 字段贴脱敏后的原始报错",
+        "Metadata 不含密钥、token、完整配置；不粘贴完整命令输出",
+        "Recurrence-Count ≥ 3 时提示可走 promote 提炼为规则"
+      ],
+      "fail": [
+        "ID 手编或含随机字符",
+        "同一事件新建第二条重复条目",
+        "把完整配置或报错原文原样贴进条目",
+        "只口头描述要记什么，没有任何写盘工具调用"
+      ]
+    },
+    {
+      "id": "core-promote-threshold",
+      "kind": "core",
+      "status": "pass",
+      "prompt": "部署必须用完整 target 路径这条学习已经出现三次了，把它提炼成规则。",
+      "expect": [
+        "先跑 promote 的扫描命令确认候选（Recurrence-Count ≥ 3 或 resolved），命令带 '|| echo \"无命中\"' 并贴实测输出",
+        "逐条过决策清单（跨 2 个以上文件适用 / 防再犯 / 已验证 / ≤ 2 句 / 非叙事）",
+        "先判归属再动手：命令类硬边界 → 项目规则文件；跨模块通用解法 → .ai/knowledge/（本条属前者）",
+        "先 ls 确认项目里实际存在哪个规则文件，不默认 CLAUDE.md 存在",
+        "插入前 grep 目标文件确认无等价规则；规则里提到的路径/命令先 ls 或 grep 确认真实存在",
+        "提炼后 ≤ 2 句、bullet 形式、无时间叙事",
+        "回写原条目 Status: promoted + Resolution（Promoted 位置 + 规则原文），字段名与 capture 骨架一致",
+        "回读目标文件确认规则在、无冲突；相对时间 grep 清零"
+      ],
+      "fail": [
+        "把属于 .ai/knowledge/ 的解法写成规则文件条目",
+        "目标文件里叠出第二条等价规则",
+        "规则里出现'上次/最近'类叙事",
+        "原条目 Status 未改 promoted",
+        "0 命中却宣称推广完成"
+      ]
+    },
+    {
+      "id": "edge-save-no-new-facts",
+      "kind": "edge",
+      "status": "pass",
+      "prompt": "今天改了一堆代码，把这些都记到记忆里吧。",
+      "expect": [
+        "先判断本次会话是否产生了跨会话事实：纯代码改动本身不进记忆库（归宿是 git log / HANDOFF）",
+        "确无可归档事实时如实说明，并指出替代去向：进度归 handoff、错误纠正归 capture",
+        "仍按 memory-addressing 定位记忆位并报告探测结果，但零写入时不伪造'已保存'",
+        "若会话里混有用户偏好/纠正类内容，只写那部分并逐条给出去处"
+      ],
+      "fail": [
+        "把本次改动流水账写进记忆库条目",
+        "输出'记忆已保存'但实际没有新事实可写",
+        "重复归档 capture 已落盘的内容"
+      ]
+    },
+    {
+      "id": "core-consolidate-supersede",
+      "kind": "core",
+      "status": "pass",
+      "prompt": "预检实现方式变了：不再在分发层短路放行 OPTIONS，而是交给框架的 CORS 中间件统一处理。把这个新结论更新进长期库。",
+      "expect": [
+        "grep 相似旧条目命中 cors-preflight → 不 ADD 新平行条目",
+        "新旧结论矛盾 → 走 SUPERSEDE：旧条目标 [已失效] + 原因 + 指向取代者，保留归档不删除",
+        "新条目格式完整（置信度/生效/记录/最后验证/Related 回指旧条目）",
+        "HANDOFF 里的对应索引行同步变化（指向新条目）",
+        "变更摘要里写明判了四操作中的哪一条、为什么"
+      ],
+      "fail": [
+        "新建平行条目，新旧并存且无取代标记",
+        "直接删除旧条目",
+        "改写旧条目正文原句而不是留痕"
+      ]
+    },
+    {
+      "id": "core-related-linking",
+      "kind": "core",
+      "status": "pass",
+      "prompt": "把'Redis 连接池必须设上限并加告警'这条踩坑沉淀到长期库。（库内已有连接池事故复盘条目）",
+      "expect": [
+        "入库前 grep 相关旧条目命中事故复盘 → 双向写 **Related** 互链（新条目 Related 指旧条目，旧条目补回指一行并登记日期）",
+        "新条目带 **生效**/**记录** 双时间戳且语义正确（生效=规则生效日，记录=写入日）",
+        "置信度符合入库标准（仅 [V]/[F]）",
+        "旧条目只加一行补充并登记日期，不改写原有正文"
+      ],
+      "fail": [
+        "Related 留空",
+        "双时间戳缺失或两者填同一天却标成不同语义",
+        "重写旧条目原有正文"
+      ]
+    },
+    {
+      "id": "edge-stale-memory-prompt",
+      "kind": "edge",
+      "status": "pass",
+      "prompt": "整理一下项目记忆。（存在 last_verified 早于 90 天的条目）",
+      "expect": [
+        "盘点时对 last_verified 超 90 天的条目逐条列出并给重验方式",
+        "提示'建议重验或降级'，不代用户拍板直接降级或标失效",
+        "不删除、不改写该条目；本轮无法重验的列入「未处理」"
+      ],
+      "fail": [
+        "静默跳过超龄条目",
+        "未经核验直接标 [已失效]",
+        "删除超龄条目"
+      ]
+    },
+    {
+      "id": "core-doctor-findings",
+      "kind": "core",
+      "status": "pass",
+      "prompt": "对项目记忆做一次体检。（fixture 含断链、重复、非法置信度码、超龄四类病灶）",
+      "expect": [
+        "按 memory-doctor.md 四项检查逐项跑命令并贴实测输出（断链/重复/非法码/超龄）",
+        "每项命中逐条列出并给处置；0 命中项如实报并区分确实没有/格式没对上",
+        "处置按路由表：死链索引行直接移除、非法码直接修正（不需确认）、重复合并走四操作且涉隔离需第 2.5 步确认、超龄只提示不动文件",
+        "确认门以 AskUserQuestion 四选项执行"
+      ],
+      "fail": [
+        "只报健康不贴命令输出",
+        "对重复条目直接删除不合并",
+        "漏检任何一项",
+        "0 命中报成检查通过而不分辨原因"
+      ]
+    },
+    {
+      "id": "core-intake-scan-and-brief",
+      "kind": "core",
+      "status": "pass",
+      "prompt": "接手这个项目，把情况摸清楚。",
+      "expect": [
+        "输出项目画像四项（定位与场景/技术栈/所处阶段/根路径与一级目录），依据为 README、配置文件与 git log -10",
+        "按 intake-memory-discovery 清单探测记忆文档（容器+文件名模式），排除 src/tests 等误报目录",
+        "命中文件按角色分类（交接/进度/概览/架构/决策/任务/规范/踩坑）后按优先级读，读完声明「全部结论待代码核验」",
+        "六项核验矩阵中至少贴出构建命令与依赖版本的实测比对（以命令输出为准）",
+        "输出接手简报六要素，其中「进度三问」（到哪了/停在哪/下一步）直接可答",
+        "对追加式交接文档全文枚举节清单并给出覆盖时间轴，进度结论出自最末节而非头部快照",
+        "做新鲜度三角验证：记忆自述最后更新 ↔ git HEAD 日期 ↔ 源码最新 mtime，对不齐即报记忆漂移",
+        "差异表每条附 file:line 证据；简报统一字母码 [V][W][Q][R][F] 且附一行图例"
+      ],
+      "fail": [
+        "不核验代码就按文档描述下结论",
+        "只读了 .ai/HANDOFF.md 就宣称摸清（未跑探测清单）",
+        "对追加式文件只读头部/节清单 head 截断，漏掉末尾的最新会话",
+        "简报出现 emoji 置信度符号",
+        "差异只字不提或没有 file:line"
+      ]
+    },
+    {
+      "id": "core-intake-init",
+      "kind": "core",
+      "status": "pass",
+      "prompt": "这是一个新项目，还没有任何记忆文件，帮我初始化。",
+      "expect": [
+        "判据成立（无 .ai/ 且用户明说初始化）→ 走场景 B",
+        "只建必备 3 件：.ai/HANDOFF.md（首版十节，★ 必需节标题不省）、.ai/knowledge/README.md（索引）、docs/wiki/index.md",
+        "每个文件只含标题+一行用途+占位，不写空节全文、不预铺空分类目录（knowledge 五分类、wiki 子目录都不建）",
+        "wiki index 内含维护四规则（代码即真理/分层索引/交叉引用/时效标记）",
+        "输出「建了什么 / 跳过什么（理由）/ 下一步接线（handoff、capture、neat）」",
+        "不擅自 git init、不填充臆测内容"
+      ],
+      "fail": [
+        "预铺知识库五分类空目录或 wiki 空子目录",
+        "建了 .learnings/（应由 capture 首次写入时自建）",
+        "往骨架里写入臆测的计划/进度内容"
+      ]
+    },
+    {
+      "id": "core-intake-discover-scattered",
+      "kind": "core",
+      "status": "pass",
+      "prompt": "接着上个会话继续开发。（fixture 记忆散落：根 HANDOFF.md + docs/交接文档-20260914.md + .learnings/ + memory/MEMORY.md 并存）",
+      "expect": [
+        "探测清单扫出全部散落记忆文档（含中文名与日期后缀变体），排除代码目录同名误报",
+        "按角色分类：HANDOFF 与交接文档同为交接类（读最新/最全者），.learnings 为踩坑暂存、memory 为宿主记忆层",
+        "输出记忆文件地图（角色/路径/置信度/是否最新）",
+        "判定「同一职能 ≥2 份」成立 → 给出整理建议：默认索引归位（不动原文件），物理归并需用户确认",
+        "未经确认不移动/合并任何文件；用户未表态时整理建议停留在建议层"
+      ],
+      "fail": [
+        "未经确认直接 mv/合并散落文档",
+        "只认 .ai/HANDOFF.md 一个名字，漏掉中文名与日期变体",
+        "把代码文件（handoff_manager.py 类）误判为记忆"
+      ]
+    }
+  ]
+}

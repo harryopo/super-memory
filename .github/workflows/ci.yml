@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: 结构自检
+        run: python scripts/verify.py
+      - name: 评测用例完整性
+        run: |
+          python - <<'EOF'
+          import json
+          d = json.load(open("evals/evals.json", encoding="utf-8"))
+          ids = [c["id"] for c in d["cases"]]
+          assert len(ids) == len(set(ids)), "用例 id 重复"
+          assert all(c.get("expect") and c.get("fail") for c in d["cases"]), "用例缺 expect/fail"
+          print(f"evals: {len(ids)} 例结构完整")
+          EOF
