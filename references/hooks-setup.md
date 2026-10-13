@@ -7,7 +7,7 @@ super-memory 的写入端默认靠触发词（用户开口）或 agent 自觉。
 | 时机 | 注入内容 | 解决什么 |
 |---|---|---|
 | SessionStart | 提醒走 intake 接手（读交接与记忆索引） | 记忆冷启动 |
-| PreCompact | 上下文压缩前提醒先跑 capture + handoff | 压缩丢上下文前抢救关键信息 |
+| PreCompact | 上下文压缩前提醒跑 capture + handoff 压缩保全（至少刷新 §0 快照 + §3 断点） | 压缩丢上下文前抢救关键信息 |
 | SessionEnd / Stop | 提醒跑 capture → handoff → save 最小闭环 | 被动收尾 |
 
 ## Claude Code 配置片段（~/.claude/settings.json）
@@ -32,7 +32,7 @@ super-memory 的写入端默认靠触发词（用户开口）或 agent 自觉。
         "hooks": [
           {
             "type": "command",
-            "command": "echo '[super-memory] 上下文即将压缩：先执行 capture（未记的错误/纠正）→ handoff（断点与进度），再允许压缩。'"
+            "command": "echo '[super-memory] 上下文即将压缩：先 capture（未记的错误/纠正）→ handoff 压缩保全（至少刷新 §0 快照与 §3 断点），再允许压缩。'"
           }
         ]
       }

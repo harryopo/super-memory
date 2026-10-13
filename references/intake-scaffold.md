@@ -6,7 +6,7 @@
 
 | 文件 | 内容 |
 |---|---|
-| `.ai/HANDOFF.md` | 按 `handoff-template.md` 十节写首版；无内容节留占位（`- （待填）`），★ 必需节不许省标题 |
+| `.ai/HANDOFF.md` | 按 `handoff-template.md` 十一节（§0 快照 + 十节编年）写首版；§0 填目标与下一步，无内容节留占位（`- （待填）`），★ 必需节不许省标题 |
 | `.ai/knowledge/README.md` | 长期库索引：五分类用途表（decisions/patterns/problem-solutions/business/standards），注明"首条内容出现时才建对应分类目录" |
 | `docs/wiki/index.md` | wiki 首页：导航骨架 + 维护四规则（见下） |
 

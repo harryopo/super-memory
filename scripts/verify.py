@@ -82,7 +82,8 @@ print("  五个置信度码齐且互不重复:", all(c in hs for c in codes),
 is_ = open("subskills/intake/SKILL.md", encoding="utf-8").read()
 print("  handoff 指向 intake:", "ok" if "intake" in hs else "❌ 缺")
 print("  handoff 进度可扫读质量条:", "ok" if "进度可扫读" in hs else "❌ 缺")
-print("  handoff 追加式头部指针:", "ok" if "追加式头部指针" in hs else "❌ 缺")
+print("  handoff 快照即头部质量条:", "ok" if "快照即头部" in hs else "❌ 缺")
+print("  handoff 压缩保全分级:", "ok" if "压缩保全" in hs else "❌ 缺")
 print("  intake 五码齐:", "ok" if all(c in is_ for c in codes) else "❌ 缺")
 print("  intake 引用 discovery/scaffold:", "ok" if "intake-memory-discovery" in is_ and "intake-scaffold" in is_ else "❌ 缺")
 print("  intake 全面分析+三角验证+newermt:",
@@ -92,10 +93,13 @@ print("  discovery 全面分析三层次+实战案例:", "ok" if "全面分析�
 
 tpl = open("references/handoff-template.md", encoding="utf-8").read()
 secs = re.findall(r"^## \*?\u2605?\*?(\d+)\.", tpl, re.M)
-print("  模板节数:", len(secs), "期望 10 ->", "ok" if len(secs) == 10 else "MISMATCH", secs)
+print("  模板节数:", len(secs), "期望 11 ->",
+      "ok" if len(secs) == 11 else "MISMATCH", secs)
 sec_stars = re.findall(r"^## \u2605\d+\.", tpl, re.M)
-print("  必需节标记(★)个数:", len(sec_stars), "期望 6 ->",
-      "ok" if len(sec_stars) == 6 else "MISMATCH")
+print("  必需节标记(★)个数:", len(sec_stars), "期望 7 ->",
+      "ok" if len(sec_stars) == 7 else "MISMATCH")
+print("  §0 当前快照存在:", "ok" if "## \u26050. 当前快照" in tpl else "❌ 缺")
+print("  快照七槽位齐:", "ok" if all(k in tpl for k in ["**目标**", "**需求与约束**", "**关键决策**", "**状态**", "**下一步动作**", "**相关文件**", "**关键上下文**"]) else "❌ 缺")
 print("  图例存在:", "ok" if "★ = 必需节" in tpl else "缺失")
 
 print("=== A5 统计命令 vs 黄金样本（防'命令与格式脱节'复发）===")
