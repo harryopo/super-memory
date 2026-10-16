@@ -129,6 +129,7 @@ print("  K-NNN 生成命令:", "ok" if "K-$D" in tiers and "wc -l" in tiers else
 print("  knowledge 淘汰不隔离:", "ok" if "不隔离" in tiers else "❌ 缺")
 print("  失效标记三要素示例:", "ok" if "**已失效**：" in tiers and "取代者 ID + 原因" in tiers else "❌ 缺")
 print("  知识库索引登记规则:", "ok" if "登记一行" in tiers else "❌ 缺")
+print("  共存纪律（重读+分工）:", "ok" if "编辑前重读" in addr and "它铺叙事" in addr else "❌ 缺")
 
 parent = open("SKILL.md", encoding="utf-8").read()
 subs = sorted(glob.glob("subskills/*/SKILL.md"))

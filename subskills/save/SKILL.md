@@ -37,7 +37,7 @@
 
 ### 4. 写入
 
-- **先 grep 索引**：命中同类条目 → Edit 那条（含更新它的 description），不新建。
+- **先 grep 索引**：命中同类条目 → **重读后** Edit 那条（宿主后台提取可能已改动它，见 `../../references/memory-addressing.md` 第四节），不新建。
 - **格式照现存条目**：读目标目录 1–2 个现有文件，抄它的 frontmatter 字段与索引行格式，不自创。
 - 新建时：文件名 kebab-case、`name` 与文件名一致、`description` 写成将来能凭它判断相关性的具体一句话；frontmatter 默认带 `last_verified: <写入日期>`（便于 neat 超龄体检），若目标目录现存条目都不用此字段则跟现存格式不强加。
 - 每条正文含：事实本身 + **Why**（哪次踩的、什么约束）+ **How to apply**（什么时候生效）。
