@@ -1,4 +1,4 @@
-import re, glob, os, json
+import re, glob, os, json, sys, subprocess
 
 BS = chr(92)
 
@@ -130,6 +130,23 @@ print("  knowledge 淘汰不隔离:", "ok" if "不隔离" in tiers else "❌ 缺
 print("  失效标记三要素示例:", "ok" if "**已失效**：" in tiers and "取代者 ID + 原因" in tiers else "❌ 缺")
 print("  知识库索引登记规则:", "ok" if "登记一行" in tiers else "❌ 缺")
 print("  共存纪律（重读+分工）:", "ok" if "编辑前重读" in addr and "它铺叙事" in addr else "❌ 缺")
+
+print("=== 检索与可选件 ===")
+r = subprocess.run([sys.executable, "scripts/search.py", "--selftest"],
+                   capture_output=True, text=True)
+st = r.stdout.strip()
+print("  search.py selftest:", st if "PASS" in st else "❌ " + (st or r.stderr.strip())[:60])
+cap = open("subskills/capture/SKILL.md", encoding="utf-8").read()
+print("  capture Tags 字段:", "ok" if "- Tags: " in cap else "❌ 缺")
+print("  K 条目 Tags 行:", "ok" if "**Tags**：" in tiers else "❌ 缺")
+print("  intake 检索三连:", "ok" if "换词三连" in is_ else "❌ 缺")
+doc = open("references/memory-doctor.md", encoding="utf-8").read()
+print("  doctor 锚点活性(第五项):", "ok" if "锚点活性" in doc and "检查五" in doc else "❌ 缺")
+hooks = open("references/hooks-setup.md", encoding="utf-8").read()
+print("  hooks 四时机(PostToolUse+session_intro):",
+      "ok" if "PostToolUse" in hooks and "hook_session_intro" in hooks and "hook_capture_reminder" in hooks else "❌ 缺")
+print("  可选件文档齐(memory-git/semantic-search):",
+      "ok" if os.path.exists("references/memory-git.md") and os.path.exists("references/semantic-search.md") else "❌ 缺")
 
 parent = open("SKILL.md", encoding="utf-8").read()
 subs = sorted(glob.glob("subskills/*/SKILL.md"))

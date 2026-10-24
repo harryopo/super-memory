@@ -1,7 +1,7 @@
 {
   "skill": "super-memory",
   "executed_at": "2026-10-03",
-  "note": "2026-10-03 全部 15 例首轮实跑：在 /tmp 沙箱为每例建独立 fixture，按 skill 规则真实执行流程并逐项核对 expect/fail，结果 15/15 PASS。boundary-delete-quarantine 与 core-doctor-findings 的 AskUserQuestion 确认门为模拟用户选择（选①），其余步骤均真实执行；宿主探测类用例以 HOME 指向沙箱假 home，避免污染真实记忆库。重跑纪律：任何行为相关改动后，受影响的用例必须在沙箱重跑并把结果登记到对应提交信息。2026-10-10 修复轮重跑 4 例（addressing / capture / promote / consolidate-supersede）全部仍 PASS。2026-10-10 intake 新增轮共 18 例：新增 3 例实跑 PASS（scan-and-brief 的探测/画像/核验命令与 init 的骨架结构、discover-scattered 的中文名与日期变体命中及诱饵排除均为沙箱实测；简报格式与整理不擅动等输出要求为静态断言+演示核对），改名后 boundary-intake-read-vs-code 与 core-handoff-write（handoff 有编辑）重跑 PASS。2026-10-10 真实项目 dogfood（tdsf-terminal-agent-clone，散落最重样本）：探测清单实战修订（+dev-state/*现状*/*规划* 模式、+*.md 过滤、+src-tauri/.trae 排除、+平行标记映射），修订后的 find 命令实测仍命中全部 8 份交接文档且排除 3 类误报。2026-10-10 二次 dogfood（进度三问答错被用户纠正）：新增追加式/快照式形态二分规则（追加式最新在末尾、节清单不许 head 截断）与 A4 三件套（git status / branch / 最新tag..HEAD 计数）。2026-10-10 三次沉淀（用户指示：mtime 定活跃区、读记忆要全面分析）：A1 加最近修改文件 Top10＝活跃开发区，A2 全面分析三层次（结构全枚举/最新节全文/多源交叉，细节下沉 discovery），A4 新鲜度三角（记忆自述↔git HEAD↔源码 mtime），handoff 写端加第七条'追加式头部指针'；scan-and-brief 用例 expect 同步加时间轴与三角验证两条。",
+  "note": "2026-10-03 全部 15 例首轮实跑：在 /tmp 沙箱为每例建独立 fixture，按 skill 规则真实执行流程并逐项核对 expect/fail，结果 15/15 PASS。boundary-delete-quarantine 与 core-doctor-findings 的 AskUserQuestion 确认门为模拟用户选择（选①），其余步骤均真实执行；宿主探测类用例以 HOME 指向沙箱假 home，避免污染真实记忆库。重跑纪律：任何行为相关改动后，受影响的用例必须在沙箱重跑并把结果登记到对应提交信息。2026-10-10 修复轮重跑 4 例（addressing / capture / promote / consolidate-supersede）全部仍 PASS。2026-10-10 intake 新增轮共 18 例：新增 3 例实跑 PASS（scan-and-brief 的探测/画像/核验命令与 init 的骨架结构、discover-scattered 的中文名与日期变体命中及诱饵排除均为沙箱实测；简报格式与整理不擅动等输出要求为静态断言+演示核对），改名后 boundary-intake-read-vs-code 与 core-handoff-write（handoff 有编辑）重跑 PASS。2026-10-10 真实项目 dogfood（tdsf-terminal-agent-clone，散落最重样本）：探测清单实战修订（+dev-state/*现状*/*规划* 模式、+*.md 过滤、+src-tauri/.trae 排除、+平行标记映射），修订后的 find 命令实测仍命中全部 8 份交接文档且排除 3 类误报。2026-10-10 二次 dogfood（进度三问答错被用户纠正）：新增追加式/快照式形态二分规则（追加式最新在末尾、节清单不许 head 截断）与 A4 三件套（git status / branch / 最新tag..HEAD 计数）。2026-10-10 三次沉淀（用户指示：mtime 定活跃区、读记忆要全面分析）：A1 加最近修改文件 Top10＝活跃开发区，A2 全面分析三层次（结构全枚举/最新节全文/多源交叉，细节下沉 discovery），A4 新鲜度三角（记忆自述↔git HEAD↔源码 mtime），handoff 写端加第七条'追加式头部指针'；scan-and-brief 用例 expect 同步加时间轴与三角验证两条。2026-10-16 优化轮（单人定位，用户全选）：检索纪律+同义 Tags、scripts/search.py（BM25-lite，--selftest 断言进 verify）、错误→capture 提醒 hook 与 SessionStart §0 注入（两脚本四场景实测）、doctor 锚点活性第五项、重跑纪律 CI 检测、memory-git/semantic-search 可选件文档；scan-and-brief expect 加检索纪律一条。",
   "cases": [
     {
       "id": "core-addressing-two-level",
@@ -287,6 +287,7 @@
         "六项核验矩阵中至少贴出构建命令与依赖版本的实测比对（以命令输出为准）",
         "输出接手简报六要素，其中「进度三问」（到哪了/停在哪/下一步）直接可答",
         "对追加式交接文档全文枚举节清单并给出覆盖时间轴，进度结论出自最末节而非头部快照",
+        "检索记忆时执行换词三连（中/英/同义词）并用 Tags/路径/日期补搜，或直接调用 scripts/search.py 排序检索",
         "做新鲜度三角验证：记忆自述最后更新 ↔ git HEAD 日期 ↔ 源码最新 mtime，对不齐即报记忆漂移",
         "差异表每条附 file:line 证据；简报统一字母码 [V][W][Q][R][F] 且附一行图例"
       ],

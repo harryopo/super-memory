@@ -59,6 +59,7 @@ flowchart LR
 | 双时间戳 | `生效` / `记录` 分离，过时可判、演化可追 | Graphiti |
 | 记忆体检 | 断链 / 重复 / 非法置信度码 / 超龄未验证，四项机械检查 | Letta /doctor |
 | 探测式寻址 | 不硬编码宿主路径：宿主自述 → 规则文件 → glob 探测 → 兜底；8 类宿主形态实测 | — |
+| 同义标签 + 排序检索 | 条目写 `Tags`（中文词+英文词+领域词），多词查询走 `scripts/search.py`（BM25-lite，零依赖） | IR 常识 |
 | intake 接手 | 探测散落记忆（中文名 / 日期变体 / 多容器）→ 真值核验 → 接手简报 | — |
 
 ## 📦 安装
@@ -96,7 +97,8 @@ curl -L https://github.com/harryopo/super-memory/archive/refs/heads/main.tar.gz 
 - **宿主自动记忆**（Claude Code memory tool 等）：写前先 grep 索引，命中同主题就 Edit 不新建（`ADD/UPDATE/SUPERSEDE/NOOP` 四操作，见 `references/knowledge-tiers.md`）
 - **self-improving-agent**：`.learnings/` 格式权威归本 skill 的 capture；写入前 grep 去重，同一事件不记两遍
 - **claude-mem 等自动记忆插件**：可共存，但插件不得写 `.ai/` 与 `.learnings/`（这两处格式与历史由本 skill 排他管理）
-- **hooks 自动触发**（可选增强）：会话开始读交接、压缩前抢救、结束提醒归档——配置片段见 `references/hooks-setup.md`，不装也能用
+- **hooks 自动触发**（可选增强）：四个时机——开场注入 §0 快照、**命令失败提醒 capture**、压缩前抢救、结束提醒归档——配置见 `references/hooks-setup.md`，不装也能用
+- **记忆目录 git 化 / 语义检索**（可选增强，opt-in）：编辑历史与回滚、真·语义召回——方案见 `references/memory-git.md` 与 `references/semantic-search.md`
 
 ## 🧪 质量
 

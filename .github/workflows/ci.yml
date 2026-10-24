@@ -24,3 +24,12 @@ jobs:
           assert all(c.get("expect") and c.get("fail") for c in d["cases"]), "用例缺 expect/fail"
           print(f"evals: {len(ids)} 例结构完整")
           EOF
+      - name: 重跑纪律检测
+        run: |
+          CHANGED=$(git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -cE "^(SKILL\.md|subskills/|references/)" || true)
+          EVALS_CHANGED=$(git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -c "evals/evals.json" || true)
+          if [ "${CHANGED:-0}" -gt 0 ] && [ "${EVALS_CHANGED:-0}" -eq 0 ]; then
+            echo "::warning::行为文件变更但 evals/evals.json 未同步——按重跑纪律：沙箱重跑受影响用例并更新 note"
+          else
+            echo "重跑纪律：OK（无行为变更或 evals 已同步）"
+          fi

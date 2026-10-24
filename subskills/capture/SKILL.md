@@ -68,7 +68,10 @@ printf '%s-%s-%03d\n' "$T" "$D" "$N"
 - Related Files: path/to/file.ext
 - See Also: LRN-20260928-003
 - Recurrence-Count: 1
+- Tags: 部署 rsync deployment
 ```
+
+`Tags` 规则：2–4 个检索词，**中文词 + 英文词 + 领域词各一**（换词也命中的关键——写入时多花 5 秒，检索时省三轮 grep）；领域词从 Area 取或自拟。
 
 `ERRORS.md` 用同一骨架，把 `Category` 换成 `**Error**` 代码块（贴原始报错，脱敏后），并加 `- Reproducible: yes | no | unknown`。
 `FEATURE_REQUESTS.md` 用同一骨架，正文字段为 `**Requested Capability**` / `**User Context**` / `**Complexity Estimate**` / `**Suggested Implementation**`，Metadata 加 `- Frequency: first_time | recurring`。
