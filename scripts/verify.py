@@ -142,6 +142,8 @@ print("  K 条目 Tags 行:", "ok" if "**Tags**：" in tiers else "❌ 缺")
 print("  intake 检索三连:", "ok" if "换词三连" in is_ else "❌ 缺")
 doc = open("references/memory-doctor.md", encoding="utf-8").read()
 print("  doctor 锚点活性(第五项):", "ok" if "锚点活性" in doc and "检查五" in doc else "❌ 缺")
+print("  doctor 字段齐全性(第六项):", "ok" if "检查六" in doc and "条目格式齐全性" in doc else "❌ 缺")
+print("  检索先定库纪律:", "ok" if "先定库" in is_ and "先定库" in disc else "❌ 缺")
 hooks = open("references/hooks-setup.md", encoding="utf-8").read()
 print("  hooks 四时机(PostToolUse+session_intro):",
       "ok" if "PostToolUse" in hooks and "hook_session_intro" in hooks and "hook_capture_reminder" in hooks else "❌ 缺")

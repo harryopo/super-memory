@@ -83,13 +83,14 @@ find . -maxdepth 4 -name "*.md" \( -iname "*handoff*" -o -iname "*handover*" -o 
 
 ## 检索纪律（找记忆时的搜索动作）
 
-单轮 grep 不够，三层动作：
+单轮 grep 不够，四层动作：
 
+0. **先定库（2026-10-24 dogfood 新增）**：记忆分布在多个记忆位——项目位（`.ai/`、`.learnings/`、`memory/`）与各宿主位（ZCode/Qoder/Claude…，按 addressing 四层探测枚举）。同一查询**逐库搜**，别在单库里搜不到就下结论。实测：查询「git 提交 门禁 拦截」在 Qoder 库（151 条）前三名全是近似项，真目标 `mimosa-security-hooks.md` 在 ZCode 库第一名精确命中（3.23 分）——库选错，词换遍也没用。
 1. **换词三连**：中/英/同义词各搜一轮（错误↔踩坑↔failure、交接↔进度↔handoff、决策↔拍板↔decision）。
 2. **补搜维度**：`Tags:` 字段、文件路径片段、日期（YYYYMMDD）、ID 前缀（LRN-/K-/ERR-）。
-3. **排序检索**：多词查询用 `python <skill目录>/scripts/search.py "查询词" --root <工作区>`——BM25-lite（标题行 ×3 加权、CJK 二元组切词、自动排除 node_modules/.git/src 等噪声），输出 Top-N 文件与命中行。
+3. **排序检索**：多词查询用 `python <skill目录>/scripts/search.py "查询词" --root <库>`——BM25-lite（标题行 ×3 加权、CJK 二元组切词、自动排除 node_modules/.git/src 等噪声），输出 Top-N 文件与命中行。
 
-三轮全空才可判"无"，并注明搜过哪些词——这本身就是给下个会话的记忆。
+全部库 × 全部词空才可判"无"，并注明搜过哪些库哪些词——这本身就是给下个会话的记忆。
 
 ## 三、整理两模式（仅当散落/重叠时启用）
 

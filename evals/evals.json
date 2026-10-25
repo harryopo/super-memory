@@ -1,7 +1,7 @@
 {
   "skill": "super-memory",
   "executed_at": "2026-10-03",
-  "note": "2026-10-03 全部 15 例首轮实跑：在 /tmp 沙箱为每例建独立 fixture，按 skill 规则真实执行流程并逐项核对 expect/fail，结果 15/15 PASS。boundary-delete-quarantine 与 core-doctor-findings 的 AskUserQuestion 确认门为模拟用户选择（选①），其余步骤均真实执行；宿主探测类用例以 HOME 指向沙箱假 home，避免污染真实记忆库。重跑纪律：任何行为相关改动后，受影响的用例必须在沙箱重跑并把结果登记到对应提交信息。2026-10-10 修复轮重跑 4 例（addressing / capture / promote / consolidate-supersede）全部仍 PASS。2026-10-10 intake 新增轮共 18 例：新增 3 例实跑 PASS（scan-and-brief 的探测/画像/核验命令与 init 的骨架结构、discover-scattered 的中文名与日期变体命中及诱饵排除均为沙箱实测；简报格式与整理不擅动等输出要求为静态断言+演示核对），改名后 boundary-intake-read-vs-code 与 core-handoff-write（handoff 有编辑）重跑 PASS。2026-10-10 真实项目 dogfood（tdsf-terminal-agent-clone，散落最重样本）：探测清单实战修订（+dev-state/*现状*/*规划* 模式、+*.md 过滤、+src-tauri/.trae 排除、+平行标记映射），修订后的 find 命令实测仍命中全部 8 份交接文档且排除 3 类误报。2026-10-10 二次 dogfood（进度三问答错被用户纠正）：新增追加式/快照式形态二分规则（追加式最新在末尾、节清单不许 head 截断）与 A4 三件套（git status / branch / 最新tag..HEAD 计数）。2026-10-10 三次沉淀（用户指示：mtime 定活跃区、读记忆要全面分析）：A1 加最近修改文件 Top10＝活跃开发区，A2 全面分析三层次（结构全枚举/最新节全文/多源交叉，细节下沉 discovery），A4 新鲜度三角（记忆自述↔git HEAD↔源码 mtime），handoff 写端加第七条'追加式头部指针'；scan-and-brief 用例 expect 同步加时间轴与三角验证两条。2026-10-16 优化轮（单人定位，用户全选）：检索纪律+同义 Tags、scripts/search.py（BM25-lite，--selftest 断言进 verify）、错误→capture 提醒 hook 与 SessionStart §0 注入（两脚本四场景实测）、doctor 锚点活性第五项、重跑纪律 CI 检测、memory-git/semantic-search 可选件文档；scan-and-brief expect 加检索纪律一条。",
+  "note": "2026-10-03 全部 15 例首轮实跑：在 /tmp 沙箱为每例建独立 fixture，按 skill 规则真实执行流程并逐项核对 expect/fail，结果 15/15 PASS。boundary-delete-quarantine 与 core-doctor-findings 的 AskUserQuestion 确认门为模拟用户选择（选①），其余步骤均真实执行；宿主探测类用例以 HOME 指向沙箱假 home，避免污染真实记忆库。重跑纪律：任何行为相关改动后，受影响的用例必须在沙箱重跑并把结果登记到对应提交信息。2026-10-10 修复轮重跑 4 例（addressing / capture / promote / consolidate-supersede）全部仍 PASS。2026-10-10 intake 新增轮共 18 例：新增 3 例实跑 PASS（scan-and-brief 的探测/画像/核验命令与 init 的骨架结构、discover-scattered 的中文名与日期变体命中及诱饵排除均为沙箱实测；简报格式与整理不擅动等输出要求为静态断言+演示核对），改名后 boundary-intake-read-vs-code 与 core-handoff-write（handoff 有编辑）重跑 PASS。2026-10-10 真实项目 dogfood（tdsf-terminal-agent-clone，散落最重样本）：探测清单实战修订（+dev-state/*现状*/*规划* 模式、+*.md 过滤、+src-tauri/.trae 排除、+平行标记映射），修订后的 find 命令实测仍命中全部 8 份交接文档且排除 3 类误报。2026-10-10 二次 dogfood（进度三问答错被用户纠正）：新增追加式/快照式形态二分规则（追加式最新在末尾、节清单不许 head 截断）与 A4 三件套（git status / branch / 最新tag..HEAD 计数）。2026-10-10 三次沉淀（用户指示：mtime 定活跃区、读记忆要全面分析）：A1 加最近修改文件 Top10＝活跃开发区，A2 全面分析三层次（结构全枚举/最新节全文/多源交叉，细节下沉 discovery），A4 新鲜度三角（记忆自述↔git HEAD↔源码 mtime），handoff 写端加第七条'追加式头部指针'；scan-and-brief 用例 expect 同步加时间轴与三角验证两条。2026-10-16 优化轮（单人定位，用户全选）：检索纪律+同义 Tags、scripts/search.py（BM25-lite，--selftest 断言进 verify）、错误→capture 提醒 hook 与 SessionStart §0 注入（两脚本四场景实测）、doctor 锚点活性第五项、重跑纪律 CI 检测、memory-git/semantic-search 可选件文档；scan-and-brief expect 加检索纪律一条。2026-10-24 完善轮：① 真实 dogfood——search.py 在 151 条真实记忆库（~/.qoder/memory）三组查询前两名均精确命中，同时发现「搜哪个库」盲区（同一查询 Qoder 库全近似项、真目标在 ZCode 库第一名 3.23 分）→ 检索纪律升级为「先定库逐库搜」四层；② doctor 第六项条目格式齐全性——首轮 grep -L 文件级命令被沙箱抓出「健康条目掩护缺字段条目」缺陷，修正为条目级 python 扫描后干净 fixture 全病灶检出零误报；③ 新增 core-retrieval-across-libs 实跑 PASS（双库 fixture：错误姿势近似冒充 vs 正确姿势精确命中）。",
   "cases": [
     {
       "id": "core-addressing-two-level",
@@ -263,9 +263,9 @@
       "status": "pass",
       "prompt": "对项目记忆做一次体检。（fixture 含断链、重复、非法置信度码、超龄四类病灶）",
       "expect": [
-        "按 memory-doctor.md 四项检查逐项跑命令并贴实测输出（断链/重复/非法码/超龄）",
+        "按 memory-doctor.md 六项检查逐项跑命令并贴实测输出（断链/重复/非法码/超龄/锚点活性/字段齐全性）",
         "每项命中逐条列出并给处置；0 命中项如实报并区分确实没有/格式没对上",
-        "处置按路由表：死链索引行直接移除、非法码直接修正（不需确认）、重复合并走四操作且涉隔离需第 2.5 步确认、超龄只提示不动文件",
+        "处置按路由表：死链索引行直接移除、非法码直接修正（不需确认）、重复合并走四操作且涉隔离需第 2.5 步确认、超龄只提示不动文件、字段缺失当场补元数据不改结论",
         "确认门以 AskUserQuestion 四选项执行"
       ],
       "fail": [
@@ -334,6 +334,24 @@
         "未经确认直接 mv/合并散落文档",
         "只认 .ai/HANDOFF.md 一个名字，漏掉中文名与日期变体",
         "把代码文件（handoff_manager.py 类）误判为记忆"
+      ]
+    },
+    {
+      "id": "core-retrieval-across-libs",
+      "kind": "core",
+      "status": "pass",
+      "prompt": "查一下以前记过的关于 git 提交被门禁拦截的经验。（fixture：记忆分布在两个记忆位——库A 含近似主题多条但无精确目标，库B 含精确目标且正文用词与查询部分同义）",
+      "expect": [
+        "先定库：枚举全部记忆位（项目位+宿主位）并逐库检索，不是只搜一个目录",
+        "在词面不完全匹配时执行换词三连（中/英/同义词），或直接调用 scripts/search.py 排序检索",
+        "最终命中精确目标条目（库B），并给出得分与命中行",
+        "汇报中注明搜过哪些库、用了哪些词——空手而归时这也是给下个会话的记录",
+        "若条目缺 Tags，按体检规则顺手法补（不改结论）"
+      ],
+      "fail": [
+        "只搜了一个库就宣布'没有相关记忆'",
+        "拿到近似命中就停（库A 的近似条目冒充目标）",
+        "自创不存在的记忆内容"
       ]
     }
   ]
