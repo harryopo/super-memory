@@ -6,9 +6,12 @@
 
 用法:
   python scripts/search.py "查询词 查询词2" [--root 目录] [--top N] [--glob 模式]
+  python scripts/search.py "查询词" --auto          # 一次扫全部记忆位（项目位+宿主位）
   python scripts/search.py --selftest
 
-设计约束：纯标准库、无网络、只读。排除噪声目录（node_modules/.git/dist/.mimosa 等）。
+设计约束：纯标准库、无网络、只读。--auto 按 memory-addressing 形态表枚举
+项目位（.ai/.learnings/memory/…）与宿主位（~/.qoder、~/.zcode、~/.claude…），
+逐库打标签输出——把检索纪律第 0 步（先定库）机械化。
 """
 import argparse
 import math
@@ -20,6 +23,13 @@ NOISE = ("/node_modules/", "/.git/", "/dist/", "/build/", "/.mimosa/",
          "/.venv/", "/venv/", "/opensource-reference/", "/.trae/", "/htmlcov/")
 DEFAULT_GLOB = "*.md"
 CJK = re.compile(r"[\u4e00-\u9fff]")
+
+# --auto 枚举的记忆位（项目相对 + 用户主目录；与 memory-addressing 形态表同步）
+AUTO_PROJECT = (".ai", ".learnings", "memory", ".memory", ".workbuddy/memory",
+                ".claude/memory", ".codex-memory", "docs/handoff", "docs/handoffs")
+AUTO_USER = (".qoder/memory", ".qoder/projects/*/memory",
+             ".zcode/cli/memories/projects/*/memory",
+             ".claude/memory", ".workbuddy/memory", ".codex/memories")
 
 
 def terms(text: str):
@@ -77,12 +87,38 @@ def score_file(path: Path, q_terms, avg_len: float, k1=1.5, b=0.75):
     return score, hits
 
 
+def auto_roots(cwd: Path, home: Path | None = None) -> list[Path]:
+    """枚举全部记忆位（项目相对 + 宿主用户目录），resolve 去重（junction 安全）。"""
+    home = Path(home or Path.home())
+    roots, seen = [], set()
+    for rel in AUTO_PROJECT + AUTO_USER:
+        p = (cwd / rel) if not rel.startswith(".qoder/projects") and "*" not in rel else None
+        if p is None:
+            continue
+        rp = p.resolve().as_posix()
+        if p.is_dir() and rp not in seen:
+            seen.add(rp)
+            roots.append(p)
+    for rel in AUTO_USER:
+        if "*" not in rel:
+            continue
+        for p in sorted(home.glob(rel)):
+            if p.is_dir():
+                rp = p.resolve().as_posix()
+                if rp not in seen:
+                    seen.add(rp)
+                    roots.append(p)
+    return roots
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description="super-memory 排序检索（BM25-lite）")
     ap.add_argument("query", nargs="*", help="查询词（可多个）")
-    ap.add_argument("--root", default=".", help="检索根目录")
+    ap.add_argument("--root", default=".", help="检索根目录（--auto 时忽略）")
     ap.add_argument("--top", type=int, default=10)
     ap.add_argument("--glob", default=DEFAULT_GLOB)
+    ap.add_argument("--auto", action="store_true",
+                    help="枚举项目位+宿主位全部记忆库一次扫完（检索纪律第 0 步机械化）")
     ap.add_argument("--selftest", action="store_true")
     args = ap.parse_args(argv)
 
@@ -104,23 +140,34 @@ def main(argv=None):
     if not q:
         ap.error("需要查询词")
     q_terms = terms(q)
-    root = Path(args.root)
-    files = list(iter_files(root, args.glob))
+    roots = auto_roots(Path.cwd()) if args.auto else [Path(args.root)]
+    files = []
+    seen = set()
+    for r in roots:
+        for p in iter_files(r, args.glob):
+            key = p.resolve().as_posix()
+            if key not in seen:
+                seen.add(key)
+                files.append((r, p))
     if not files:
-        print("无命中（根目录下没有匹配文件——分辨：路径没对上）")
+        print("无命中（--auto 未找到任何记忆位——分辨：确实没有 / 形态表没覆盖该宿主）")
         return 0
     scored = []
-    for p in files:
+    for r, p in files:
         s, hits = score_file(p, q_terms, avg_len=200)
         if s > 0:
-            scored.append((s, p, hits))
+            tag = r.name if r != Path.cwd() else "."
+            scored.append((s, tag, p, hits))
     scored.sort(key=lambda x: -x[0])
     if not scored:
         print("无命中（0 个文件得分 >0）——按纪律分辨：确实没有 / 换词再试（检索三连）/ Tags 缺失")
         return 0
-    for s, p, hits in scored[:args.top]:
-        rel = p.relative_to(root) if p.is_relative_to(root) else p
-        print(f"{s:7.2f}  {rel}")
+    for s, tag, p, hits in scored[:args.top]:
+        try:
+            rel = p.relative_to(Path.cwd()).as_posix()
+        except ValueError:
+            rel = p.as_posix()
+        print(f"{s:7.2f}  [{tag}] {rel}")
         for ln, text in hits:
             print(f"        L{ln}: {text}")
     return 0

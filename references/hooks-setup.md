@@ -6,7 +6,7 @@ super-memory 的写入端默认靠触发词（用户开口）或 agent 自觉。
 
 | 时机 | 注入内容 | 解决什么 |
 |---|---|---|
-| SessionStart | 调用 `hook_session_intro.py`：存在 `.ai/HANDOFF.md` 时**直接打印 §0 当前快照** | 记忆冷启动（零动作获得状态） |
+| SessionStart | 调用 `hook_session_intro.py`：**§0 当前快照 + 记忆增量（近 7 天改动的记忆文件）+ git 近况** | 记忆冷启动（零动作获得状态与变化） |
 | PostToolUse（Bash） | 调用 `hook_capture_reminder.py`：命令失败时提醒 capture | 该记的没记（单人场景最大损失） |
 | PreCompact | 上下文压缩前提醒跑 capture + handoff 压缩保全（至少刷新 §0 快照 + §3 断点） | 压缩丢上下文前抢救关键信息 |
 | SessionEnd / Stop | 提醒跑 capture → handoff → save 最小闭环 | 被动收尾 |

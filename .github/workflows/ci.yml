@@ -14,6 +14,8 @@ jobs:
           python-version: "3.11"
       - name: 结构自检
         run: python scripts/verify.py
+      - name: 检索自测
+        run: python scripts/search.py --selftest
       - name: 评测用例完整性
         run: |
           python - <<'EOF'
