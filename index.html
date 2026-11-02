@@ -158,7 +158,7 @@ footer .fin{font-family:var(--font-display);font-size:17px;color:var(--color-ink
       用一套结构化的记忆生命周期回答三个问题：怎么<b>存</b>、怎么<b>交</b>、怎么<b>读</b>——
       纯 Markdown 文件驱动，无外部服务、无向量库。</p>
     <div class="meta">
-      <span>六子命令</span><span>评测 <b>18/18</b> 实跑</span><span>宿主实测 <b>8 类</b></span>
+      <span>六子命令</span><span>评测 <b>19/19</b> 实跑</span><span>宿主实测 <b>8 类</b></span>
       <span><a href="https://github.com/harryopo/super-memory">github.com/harryopo/super-memory</a></span><span>MIT</span>
     </div>
   </header>
@@ -209,12 +209,14 @@ footer .fin{font-family:var(--font-display);font-size:17px;color:var(--color-ink
         <tr><td>巩固四操作</td><td>写入前查相似旧条目，ADD / UPDATE / SUPERSEDE / NOOP 四选一并写明判定；删除一律降级留痕</td><td>mem0</td></tr>
         <tr><td>Related 互链</td><td>知识条目双向链接，入库前检索相关旧条目并演化更新</td><td>A-Mem</td></tr>
         <tr><td>双时间戳</td><td>「生效」与「记录」分离——结论还成立吗看生效，当时是否最新认知看记录</td><td>Graphiti</td></tr>
-        <tr><td>记忆体检</td><td>索引断链 / 重复条目 / 非法置信度码 / 超龄未验证，四项一条命令可判</td><td>Letta /doctor</td></tr>
+        <tr><td>记忆体检</td><td>断链 / 重复 / 非法置信度码 / 超龄 / 锚点活性 / 字段齐全性，六项一条命令可判</td><td>Letta /doctor</td></tr>
+        <tr><td>四层检索</td><td>先定库（逐库搜，`--auto` 一次扫全部记忆位）→ 换词三连 → Tags 补搜 → BM25-lite 排序</td><td>dogfood 实录</td></tr>
+        <tr><td>五方向文档体系</td><td>架构与技术栈 / 开发规范红线 / 项目开发文档 / 进度与控制 / AI 协作规范；S/M/L 分档，先出地图确认再建</td><td>虚拟人 + TDSF 样本</td></tr>
         <tr><td>探测式寻址</td><td>宿主自述 → 规则文件 → glob 通用探测 → 兜底，多命中按裁决顺序；8 类宿主形态实测</td><td>自研</td></tr>
         <tr><td>新鲜度三角</td><td>记忆自述的最后更新 ↔ git HEAD 日期 ↔ 源码 mtime，对不齐即报记忆漂移</td><td>dogfood 实录</td></tr>
       </tbody>
     </table>
-    <p class="muted">检索路线刻意保持纯文件：grep + frontmatter + 索引。Claude Code 官方 memory tool、Cline memory bank、Letta MemFS 均验证过这条路线对 agent 场景足够——而且每一份记忆人都能直接打开读。</p>
+    <p class="muted">检索路线刻意保持纯文件：先定库 → grep + Tags + BM25-lite 排序，可选语义层只作旁路缓存。Claude Code 官方 memory tool、Cline memory bank、Letta MemFS 均验证过这条路线对 agent 场景足够——而且每一份记忆人都能直接打开读。</p>
   </section>
 
   <section id="s5">
@@ -233,7 +235,7 @@ python scripts/verify.py</pre>
     <div class="sec-head"><span class="sec-no">六</span><h2>质量与溯源</h2><span class="sec-sub">EVIDENCE</span></div>
     <div class="stats">
       <div class="stat"><b data-count="6">0</b><span>子命令</span></div>
-      <div class="stat"><b data-count="18" data-suffix="/18">0</b><span>评测用例真实执行</span></div>
+      <div class="stat"><b data-count="19" data-suffix="/19">0</b><span>评测用例真实执行</span></div>
       <div class="stat"><b data-count="8">0</b><span>类宿主记忆位实测</span></div>
       <div class="stat"><b data-count="40">0</b><span>真实项目采样提炼</span></div>
     </div>
