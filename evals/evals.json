@@ -1,7 +1,7 @@
 {
   "skill": "super-memory",
   "executed_at": "2026-10-03",
-  "note": "2026-10-03 全部 15 例首轮实跑：在 /tmp 沙箱为每例建独立 fixture，按 skill 规则真实执行流程并逐项核对 expect/fail，结果 15/15 PASS。boundary-delete-quarantine 与 core-doctor-findings 的 AskUserQuestion 确认门为模拟用户选择（选①），其余步骤均真实执行；宿主探测类用例以 HOME 指向沙箱假 home，避免污染真实记忆库。重跑纪律：任何行为相关改动后，受影响的用例必须在沙箱重跑并把结果登记到对应提交信息。2026-10-10 修复轮重跑 4 例（addressing / capture / promote / consolidate-supersede）全部仍 PASS。2026-10-10 intake 新增轮共 18 例：新增 3 例实跑 PASS（scan-and-brief 的探测/画像/核验命令与 init 的骨架结构、discover-scattered 的中文名与日期变体命中及诱饵排除均为沙箱实测；简报格式与整理不擅动等输出要求为静态断言+演示核对），改名后 boundary-intake-read-vs-code 与 core-handoff-write（handoff 有编辑）重跑 PASS。2026-10-10 真实项目 dogfood（tdsf-terminal-agent-clone，散落最重样本）：探测清单实战修订（+dev-state/*现状*/*规划* 模式、+*.md 过滤、+src-tauri/.trae 排除、+平行标记映射），修订后的 find 命令实测仍命中全部 8 份交接文档且排除 3 类误报。2026-10-10 二次 dogfood（进度三问答错被用户纠正）：新增追加式/快照式形态二分规则（追加式最新在末尾、节清单不许 head 截断）与 A4 三件套（git status / branch / 最新tag..HEAD 计数）。2026-10-10 三次沉淀（用户指示：mtime 定活跃区、读记忆要全面分析）：A1 加最近修改文件 Top10＝活跃开发区，A2 全面分析三层次（结构全枚举/最新节全文/多源交叉，细节下沉 discovery），A4 新鲜度三角（记忆自述↔git HEAD↔源码 mtime），handoff 写端加第七条'追加式头部指针'；scan-and-brief 用例 expect 同步加时间轴与三角验证两条。2026-10-16 优化轮（单人定位，用户全选）：检索纪律+同义 Tags、scripts/search.py（BM25-lite，--selftest 断言进 verify）、错误→capture 提醒 hook 与 SessionStart §0 注入（两脚本四场景实测）、doctor 锚点活性第五项、重跑纪律 CI 检测、memory-git/semantic-search 可选件文档；scan-and-brief expect 加检索纪律一条。2026-10-31 调研落地轮（基于市面四类机制调研：官方 auto-memory/压缩插件/会话尾巴/文件式 memory bank）：① SessionStart 开场注入升级三段式（§0 快照 + 记忆增量近 7 天 + git 近况——吸收 auto-memory 的开场自动化优点，无损实现；实测抓出 st_mtime float 格式符 bug 并修复）② search.py --auto 跨库一键检索（检索纪律第 0 步机械化；真实双库实测发现未知跨项目记忆 mimosa-gate-commit-behavior.md）③ CI 加检索自测。",
+  "note": "2026-10-03 全部 15 例首轮实跑：在 /tmp 沙箱为每例建独立 fixture，按 skill 规则真实执行流程并逐项核对 expect/fail，结果 15/15 PASS。boundary-delete-quarantine 与 core-doctor-findings 的 AskUserQuestion 确认门为模拟用户选择（选①），其余步骤均真实执行；宿主探测类用例以 HOME 指向沙箱假 home，避免污染真实记忆库。重跑纪律：任何行为相关改动后，受影响的用例必须在沙箱重跑并把结果登记到对应提交信息。2026-10-10 修复轮重跑 4 例（addressing / capture / promote / consolidate-supersede）全部仍 PASS。2026-10-10 intake 新增轮共 18 例：新增 3 例实跑 PASS（scan-and-brief 的探测/画像/核验命令与 init 的骨架结构、discover-scattered 的中文名与日期变体命中及诱饵排除均为沙箱实测；简报格式与整理不擅动等输出要求为静态断言+演示核对），改名后 boundary-intake-read-vs-code 与 core-handoff-write（handoff 有编辑）重跑 PASS。2026-10-10 真实项目 dogfood（tdsf-terminal-agent-clone，散落最重样本）：探测清单实战修订（+dev-state/*现状*/*规划* 模式、+*.md 过滤、+src-tauri/.trae 排除、+平行标记映射），修订后的 find 命令实测仍命中全部 8 份交接文档且排除 3 类误报。2026-10-10 二次 dogfood（进度三问答错被用户纠正）：新增追加式/快照式形态二分规则（追加式最新在末尾、节清单不许 head 截断）与 A4 三件套（git status / branch / 最新tag..HEAD 计数）。2026-10-10 三次沉淀（用户指示：mtime 定活跃区、读记忆要全面分析）：A1 加最近修改文件 Top10＝活跃开发区，A2 全面分析三层次（结构全枚举/最新节全文/多源交叉，细节下沉 discovery），A4 新鲜度三角（记忆自述↔git HEAD↔源码 mtime），handoff 写端加第七条'追加式头部指针'；scan-and-brief 用例 expect 同步加时间轴与三角验证两条。2026-10-16 优化轮（单人定位，用户全选）：检索纪律+同义 Tags、scripts/search.py（BM25-lite，--selftest 断言进 verify）、错误→capture 提醒 hook 与 SessionStart §0 注入（两脚本四场景实测）、doctor 锚点活性第五项、重跑纪律 CI 检测、memory-git/semantic-search 可选件文档；scan-and-brief expect 加检索纪律一条。2026-10-31 调研落地轮（基于市面四类机制调研：官方 auto-memory/压缩插件/会话尾巴/文件式 memory bank）：① SessionStart 开场注入升级三段式（§0 快照 + 记忆增量近 7 天 + git 近况——吸收 auto-memory 的开场自动化优点，无损实现；实测抓出 st_mtime float 格式符 bug 并修复）② search.py --auto 跨库一键检索（检索纪律第 0 步机械化；真实双库实测发现未知跨项目记忆 mimosa-gate-commit-behavior.md）③ CI 加检索自测。2026-11-02 五方向文档体系轮：新增 references/doc-system.md（五方向+S/M/L+审计四步）与 doc-templates.md（ARCHITECTURE/ADR/规则文件/DOC-INDEX/ROADMAP/TASKS 六模板）；intake 新增 A2c 文档体系审计、场景 B 改为按档出地图再建（正文 7947B 限内）；新增 core-doc-system-audit 实跑 PASS：空项目场景出 S 档地图→确认后建 5 件（断言件数 5/5、十一节 7★、零预铺目录、5/5 含核验行与占位）；有文档场景输出 M 档矩阵（2 份重叠+2 处超龄+6 项缺失），审计前后文件数不变=只读成立。",
   "cases": [
     {
       "id": "core-addressing-two-level",
@@ -334,6 +334,26 @@
         "未经确认直接 mv/合并散落文档",
         "只认 .ai/HANDOFF.md 一个名字，漏掉中文名与日期变体",
         "把代码文件（handoff_manager.py 类）误判为记忆"
+      ]
+    },
+    {
+      "id": "core-doc-system-audit",
+      "kind": "core",
+      "status": "pass",
+      "prompt": "接手这个项目，文档太乱了不知道全貌，帮我把项目文档理清楚。（fixture：仅有 README + 半截 HANDOFF；缺架构/规范/进度/协作文档；docs/ 下两份架构说明内容重叠且都超过 90 天未核验）",
+      "expect": [
+        "按 doc-system.md 做五方向审计：架构与技术栈 / 开发规范红线 / 项目开发文档 / 进度与控制 / AI 协作规范，逐方向列出已有文档",
+        "对照 S/M/L 分档给出档位建议与判据（会话数 / 协作者数 / 工作区数）",
+        "输出文档地图：每方向标 已有 / 缺失 / 重复 / 过期 / 无索引，重复项指明哪两份重叠",
+        "出地图后等待用户确认，不擅自建骨架、不补写缺失文档内容",
+        "审计只读：未修改、未删除、未移动任何现有文档",
+        "确认后按 doc-templates 六模板建骨架，每个文件只含标题+用途+占位"
+      ],
+      "fail": [
+        "跳过五方向地图直接新建文件",
+        "未经确认就按 L 档全建",
+        "改动或删除现有文档",
+        "编造项目内容填进骨架（臆测架构/技术栈/进度）"
       ]
     }
   ]

@@ -145,6 +145,20 @@ print("  K 条目 Tags 行:", "ok" if "**Tags**：" in tiers else "❌ 缺")
 print("  intake 检索三连:", "ok" if "换词三连" in is_ else "❌ 缺")
 doc = open("references/memory-doctor.md", encoding="utf-8").read()
 print("  doctor 锚点活性(第五项):", "ok" if "锚点活性" in doc and "检查五" in doc else "❌ 缺")
+
+print("=== 文档体系（五方向）===")
+ds = open("references/doc-system.md", encoding="utf-8").read()
+dt = open("references/doc-templates.md", encoding="utf-8").read()
+five = ["架构与技术栈", "开发规范", "项目开发文档", "进度与控制", "AI 协作规范"]
+print("  doc-system 五方向齐:", "ok" if all(k in ds for k in five) else [k for k in five if k not in ds])
+print("  S/M/L 三档齐:", "ok" if all(k in ds for k in ["S 最小", "M 标准", "L 完整"]) else "❌ 缺")
+print("  审计流程四步:", "ok" if all(k in ds for k in ["扫描", "映射", "判定缺失", "出地图"]) else "❌ 缺")
+tmpl = {"ARCHITECTURE": "ARCHITECTURE ·", "ADR": "ADR-NNN", "规则文件": "AI 规则",
+        "DOC-INDEX": "DOC-INDEX.md", "ROADMAP": "ROADMAP", "TASKS": "TASKS"}
+miss_t = [k for k, v in tmpl.items() if v not in dt]
+print("  doc-templates 六模板齐:", "ok" if not miss_t else miss_t)
+print("  intake 引用 doc-system:", "ok" if "doc-system.md" in is_ and "doc-templates.md" in is_ else "❌ 缺")
+print("  intake A2c 审计存在:", "ok" if "A2c" in is_ and "五方向审计" in is_ else "❌ 缺")
 hooks = open("references/hooks-setup.md", encoding="utf-8").read()
 print("  hooks 四时机(PostToolUse+session_intro):",
       "ok" if "PostToolUse" in hooks and "hook_session_intro" in hooks and "hook_capture_reminder" in hooks else "❌ 缺")

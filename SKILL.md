@@ -40,7 +40,7 @@ allowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion
 |--------|-----------|------|
 | capture | 本次会话出现了错误 / 用户纠正 / 知识过时 / 更好的做法，需要按 `.learnings/` 结构落盘 | `subskills/capture/SKILL.md` |
 | handoff | 会话结束或断点暂停要交接；遇到阻塞；刚做全局决策（写入端） | `subskills/handoff/SKILL.md` |
-| intake | 接手项目 / 继续上次会话 / 新会话开工要全文阅读；启动新项目要初始化骨架 | `subskills/intake/SKILL.md` |
+| intake | 接手项目 / 继续上次会话 / 新会话开工要全文阅读；启动新项目要初始化骨架；**文档不明确时梳理五方向文档体系** | `subskills/intake/SKILL.md` |
 | save | 会话结束、交付完成，把跨会话用得上的偏好与事实归档进 agent 记忆库并更新索引 | `subskills/save/SKILL.md` |
 | neat | 里程碑：对文档 + 记忆做洁癖审查（尺寸体检 → 盘点 → 识别变更 → 实际修改 → 自检 → 摘要） | `subskills/neat/SKILL.md` |
 | promote | 某条学习反复出现或用户说"以后都要这样"，提炼成规则写进项目文档 | `subskills/promote/SKILL.md` |
