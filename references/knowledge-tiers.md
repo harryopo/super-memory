@@ -73,6 +73,7 @@
 **锚点**：`path/to/file.ts:42`、commit `abc123`
 **来源**：HANDOFF §5.2（YYYY-MM-DD 会话） / `.learnings/LRN-…`
 **Tags**：部署 rsync deployment　（2–4 个检索词：中文词 + 英文词 + 领域词，供换词命中与排序检索）
+**否决方案**：… 及否决原因（如有——记录"为什么不那样做"，防止新 AI 重新踩坑）
 **Related**：K-…、K-…　（确无相关条目写"无"，不许留空）
 ```
 

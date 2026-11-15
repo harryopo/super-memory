@@ -1,6 +1,6 @@
 # 记忆体检（memory-doctor）
 
-neat 第 1b 步用。六项机械检查，每项一条命令可判，**每项都要贴实测输出**；0 命中也要报，并分辨"确实没有"还是"格式没对上"。命中项按「处置路由」处理。
+neat 第 1b 步用。五项机械检查，每项一条命令可判，**每项都要贴实测输出**；0 命中也要报，并分辨"确实没有"还是"格式没对上"。命中项按「处置路由」处理。
 
 ## 检查一：索引断链
 
@@ -44,41 +44,6 @@ grep -rhoE "`[^\`]+:\d+`" .ai/knowledge/ .ai/HANDOFF.md 2>/dev/null | sort -u | 
 
 从条目「锚点」字段抽样 3–5 个 `path:行号`：`ls`/`grep` 验证文件存在、符号（函数/变量名）仍在。**文件没了或符号消失 → 该条置信度降一级并注明复查日期**（锚点会腐烂，这是设计预期，降级不是惩罚）。抽查即可，不要求全量。
 
-## 检查六：条目格式齐全性（保存质量的机械保证）
-
-对**自管格式**（K 条目与 `.learnings/`）做**条目级**字段完备性扫描——注意 `grep -L` 是文件级（同文件健康条目会掩护缺字段条目），必须按条目块判：
-
-```bash
-# K 条目级扫描：五字段头行/Tags/Related/失效三要素（2026-10-24 实测修正版）
-python -c "
-import re, glob, sys
-for f in glob.glob('.ai/knowledge/**/*.md', recursive=True):
-    t = open(f, encoding='utf-8', errors='ignore').read()
-    for m in re.finditer(r'^## \[(K-[^\]]+)\].*?(?=^## \[|\Z)', t, re.M | re.S):
-        eid, body = m.group(1), m.group(0)
-        for field in ['置信度', '生效', '记录', '最后验证', '适用版本', 'Related']:
-            if f'**{field}**' not in body and field not in body:
-                print(f'{eid}: 缺 {field}')
-        if '**Tags**' not in body:
-            print(f'{eid}: 缺 Tags')
-        if '已失效' in body and not re.search(r'已失效.*K-\d{8}.*原因|K-\d{8}.*已失效.*原因', body):
-            print(f'{eid}: 失效行缺三要素（日期+取代者+原因）')
-"
-# .learnings 条目级扫描：骨架字段
-python -c "
-import re, glob
-for f in glob.glob('.learnings/*.md'):
-    t = open(f, encoding='utf-8', errors='ignore').read()
-    for m in re.finditer(r'^## \[([A-Z]+-[^\]]+)\].*?(?=^## \[|\Z)', t, re.M | re.S):
-        eid, body = m.group(1), m.group(0)
-        for field in ['Logged', 'Priority', 'Status', 'Summary', 'Tags']:
-            if f'**{field}' not in body and f'{field}**' not in body:
-                print(f'{eid}: 缺 {field}')
-"
-```
-
-逐条判读：缺字段 → **列出条目 ID 并当场补全**（能从正文推断的补 inferred 值，推断不了的补占位+标 `[Q]`）；Related 空 → 按互链规则检索补；Tags 缺 → 老条目趁 neat 顺手补（中英文各一+领域词）。字段补全不改结论与历史，只是补元数据。宿主记忆库条目贴宿主惯例，只提示 Tags 缺失不强制。
-
 ## 处置路由总表
 
 | 发现 | 处置 | 是否需确认 |
@@ -88,4 +53,3 @@ for f in glob.glob('.learnings/*.md'):
 | 非法置信度码 | 修正为五码或 [已失效] | 否 |
 | 超龄未验证 | 列出提示，列入未处理 | 不动文件 |
 | 锚点失效（抽查） | 该条置信度降一级 + 注明复查日期 | 否（降级非惩罚） |
-| 字段缺失/Tags 缺失 | 当场补全元数据（不改结论与历史） | 否 |
